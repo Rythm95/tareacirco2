@@ -1,4 +1,4 @@
-package entidades;
+package modelo;
 
 public class Credenciales implements Comparable<Credenciales>{
 	private Long id;

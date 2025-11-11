@@ -1,6 +1,6 @@
-package entidades;
+package modelo;
 
-public abstract class Persona {
+public class Persona {
 	protected Long idPersona;
 	protected String email;
 	protected String nombre;
