@@ -6,6 +6,7 @@
 */
 package vista;
 
+import dao.ConsultaBD;
 import dao.InsertarPersona;
 import modelo.Persona;
 
@@ -16,7 +17,9 @@ public class Main {
 		Persona p = new Persona(1L,"mail@ejemplo.es", "Ejemplo", "Bruselas");
 		
 		InsertarPersona.insertarPersona(p);
-		// Funciona nyehehe
+		
+		
+		System.out.println(ConsultaBD.listarPersonas());
 		
 		
 	}
