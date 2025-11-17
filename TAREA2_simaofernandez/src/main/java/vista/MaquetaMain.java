@@ -55,39 +55,39 @@ public class MaquetaMain {
 	static private Sesion sesion = new Sesion("Invitado", Perfil.INVITADO);
 	static private TreeSet<Espectaculo> espectaculos = new TreeSet<>();
 
-//	public static void main(String[] args) {
-//
-//		System.out.println("Bienbenido/a.\nSeleccione la acción que desea realizar:");
-//		boolean salir = false;
-//		do {
-//			switch (sesion.getPerfil()) {
-//			case INVITADO:
-//
-//				salir = menuInvitado();
-//				break;
-//
-//			case ADMIN:
-//
-//				menuAdmin();
-//				break;
-//
-//			case COORDINACION:
-//				menuCoordinacion();
-//				break;
-//
-//			case ARTISTA:
-//				menuArtista();
-//				break;
-//
-//			default:
-//				System.out.println("Ha habido algún error al procesar su sesión. Por favor, vuelva a intentarlo.");
-//				sesion.setPerfil(Perfil.INVITADO);
-//
-//			}
-//
-//		} while (!salir);
-//
-//	}
+	public static void main(/*String[] args*/) {
+
+		System.out.println("Bienbenido/a.\nSeleccione la acción que desea realizar:");
+		boolean salir = false;
+		do {
+			switch (sesion.getPerfil()) {
+			case INVITADO:
+
+				salir = menuInvitado();
+				break;
+
+			case ADMIN:
+
+				menuAdmin();
+				break;
+
+			case COORDINACION:
+				menuCoordinacion();
+				break;
+
+			case ARTISTA:
+				menuArtista();
+				break;
+
+			default:
+				System.out.println("Ha habido algún error al procesar su sesión. Por favor, vuelva a intentarlo.");
+				sesion.setPerfil(Perfil.INVITADO);
+
+			}
+
+		} while (!salir);
+
+	}
 
 //\\// Menus de perfiles
 	private static boolean menuInvitado() {

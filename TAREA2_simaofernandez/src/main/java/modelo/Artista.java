@@ -5,6 +5,7 @@ import java.util.List;
 public class Artista extends Persona {
 	private Long idArt;
 	private String apodo=null;
+	// Y si le meto varias veces la misma especialidad?
 	private List<Especialidad> especialidades;
 	
 	public Artista(Long id, String email, String nombre, String nacionalidad, Long idArt, String apodo,

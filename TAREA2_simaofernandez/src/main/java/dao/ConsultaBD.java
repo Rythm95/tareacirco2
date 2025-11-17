@@ -28,7 +28,7 @@ public class ConsultaBD {
 				String nombre_persona = rs.getString("nombre_persona");
 				String nacionalidad = rs.getString("nacionalidad");
 				
-				resp = resp.concat(resp.format("%d, %s, %s, %s%n", id, email, nombre_persona, nacionalidad));
+				resp = resp.concat(String.format("%d, %s, %s, %s%n", id, email, nombre_persona, nacionalidad));
 			}
 			
 			return resp;
