@@ -1,19 +1,14 @@
 package modelo;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Espectaculo implements Serializable, Comparable<Espectaculo>{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Espectaculo implements Comparable<Espectaculo> {
 	private Long id;
 	private String nombre;
 	private LocalDate fechaini;
 	private LocalDate fechacfin;
 	private Long idCoordinacion;
-	// NO HACE FALTA MODIFICAR ESPECTACULO (aún)
+
 
 	public Espectaculo(Long id, String nombre, LocalDate fechaini, LocalDate fechacfin, Long idCoordinacion) {
 		super();
@@ -55,7 +50,7 @@ public class Espectaculo implements Serializable, Comparable<Espectaculo>{
 	public void setFechacfin(LocalDate fechacfin) {
 		this.fechacfin = fechacfin;
 	}
-	
+
 	public Long getIdCoordinacion() {
 		return idCoordinacion;
 	}
@@ -66,12 +61,12 @@ public class Espectaculo implements Serializable, Comparable<Espectaculo>{
 
 	@Override
 	public String toString() {
-		return "Espectáculo "+id+" - "+nombre+" [De "+fechaini+" a "+fechacfin+"]";
+		return "Espectáculo " + id + " - " + nombre + " [De " + fechaini + " a " + fechacfin + "]";
 	}
 
 	@Override
 	public int compareTo(Espectaculo o) {
-		
+
 		return Long.compare(this.id, o.id);
 	}
 

@@ -12,12 +12,12 @@ import java.sql.SQLException;
 
 import modelo.Persona;
 
-public class InsertarPersona {
+public class InsertarDB {
 	
 	public static boolean insertarPersona(Persona p) {
 		String sql = "INSERT INTO personas (email, nombre_persona, nacionalidad) VALUES (?,?,?)";
 		
-		try(Connection con = ConexionBD.conectar(); PreparedStatement ps = con.prepareStatement(sql)){
+		try(Connection con = ConexionDB.conectar(); PreparedStatement ps = con.prepareStatement(sql)){
 			
 			ps.setString(1, p.getEmail());
 			ps.setString(2, p.getNombre());

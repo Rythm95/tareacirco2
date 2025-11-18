@@ -13,36 +13,35 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class ConexionBD {
+public class ConexionDB {
 
 	private static String url;
 	private static String user;
 	private static String password;
-	
-	static {
-	
+
+	// Constructor Single
+
+	public ConexionDB() {
 		Properties properties = new Properties();
-	
+
 		try (FileInputStream fis = new FileInputStream("src/main/resources/application.properties")) {
 			properties.load(fis);
 			url = properties.getProperty("urlbd");
 			user = properties.getProperty("usubd");
 			password = properties.getProperty("passbd");
-			
-		} catch (IOException e) {
-			System.out.println("Error al cargar las propiedades.");
-		}
 
-	}
-	
-	public static Connection conectar(){
-		try {
-			return DriverManager.getConnection(url,user,password);
+		} catch (IOException e) {
+//			System.out.println("Error al cargar las propiedades.");
 		}
-		catch (SQLException e) {
+	}
+
+	public static Connection conectar() {
+		try {
+			return DriverManager.getConnection(url, user, password);
+		} catch (SQLException e) {
 			System.out.println("Error al conectar con la base de datos.");
 			return null;
 		}
 	}
-	
+
 }
