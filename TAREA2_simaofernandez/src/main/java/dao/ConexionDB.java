@@ -3,6 +3,9 @@
 *
 * @author Simao Fernandez Gervasoni
 * @version 1.0
+* 
+* Clase que gestiona la conexión a la base de datos.
+* 
 */
 package dao;
 
@@ -12,15 +15,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class ConexionDB {
 
+	private static ConexionDB instance;
+	private static final Logger logger = Logger.getLogger(ConexionDB.class.getName());
+	
 	private static String url;
 	private static String user;
 	private static String password;
 
 	// Constructor Single
-
 	public ConexionDB() {
 		Properties properties = new Properties();
 
@@ -31,15 +37,22 @@ public class ConexionDB {
 			password = properties.getProperty("passbd");
 
 		} catch (IOException e) {
-//			System.out.println("Error al cargar las propiedades.");
+			logger.warning("Error al cargar las propiedades: "+e.getMessage());
 		}
+	}
+	
+	public static ConexionDB getInstance() {
+		if (instance == null) {
+			instance = new ConexionDB();
+		}
+		return instance;
 	}
 
 	public static Connection conectar() {
 		try {
 			return DriverManager.getConnection(url, user, password);
 		} catch (SQLException e) {
-			System.out.println("Error al conectar con la base de datos.");
+			logger.warning("Error al conectar con la base de dato: "+e.getMessage());
 			return null;
 		}
 	}
