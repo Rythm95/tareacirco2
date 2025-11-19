@@ -40,5 +40,10 @@ public class Artista extends Persona {
 	public void setEspecialidades(List<Especialidad> especialidades) {
 		this.especialidades = especialidades;
 	}
+	
+	// Convierte las especialidades a una cadena de texto.
+	public String especialidadesToString() {
+		return especialidades.stream().map(Enum::name).reduce((a, b) -> a + "," + b).orElse("");
+	}
 
 }

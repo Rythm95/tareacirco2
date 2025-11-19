@@ -15,20 +15,24 @@ public class ArtistaDAO {
 	private static final Logger logger = Logger.getLogger(ArtistaDAO.class.getName());
 
 	public Long insertarArtista(Artista a, Long idPersona) {
-		String sql = "INSERT INTO artistas (apodo, idPersona) VALUES (?,?)";
+		String sql = "INSERT INTO artistas (idPersona, apodo, especialidades) VALUES (?,?,?)";
 
 		try (Connection con = ConexionDB.conectar();
 				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			ps.setString(1, a.getApodo());
-			ps.setLong(2, idPersona);
+			
+			ps.setLong(1, idPersona);
+			ps.setString(2, a.getApodo());
+			ps.setString(3, a.especialidadesToString());
 
 			ps.executeUpdate();
 
 			ResultSet rs = ps.getGeneratedKeys();
 			Long idArtista = null;
 
-			if (rs.next())
+			if (rs.next()) {
 				idArtista = rs.getLong(1);
+				a.setIdArt(idArtista);
+			}
 
 			// Relación Artista_Especialidad
 			String sqlArt_Esp = "INSERT INTO artista_especialidad (idArtista, especialidad) VALUES (?, ?)";
@@ -48,4 +52,8 @@ public class ArtistaDAO {
 		}
 
 	}
+	
+//	public List<Artista> listarArtistas(){
+//		
+//	}
 }
