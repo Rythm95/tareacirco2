@@ -17,14 +17,18 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import control.RegistroControl;
 import control.Validaciones;
 import dao.AccesoPaises;
+import modelo.Artista;
+import modelo.Coordinacion;
+import modelo.Credenciales;
 import modelo.Especialidad;
 import modelo.Perfil;
 import modelo.Persona;
 import modelo.Sesion;
 
-	// Separar en clases por sesiones
+// Separar en clases por sesiones
 public class Main {
 
 	static private Scanner read = new Scanner(System.in);
@@ -237,7 +241,7 @@ public class Main {
 						}
 					} while (esSenior != 'Y' && esSenior != 'N');
 
-//					persona = new Coordinacion(personaID(), email, name, nacionalidad, perfilID(perfil), senior, seniorFecha);
+					persona = new Coordinacion(0L, email, name, nacionalidad, 0L, senior, seniorFecha);
 				} else {
 					char tieneApodo;
 
@@ -279,7 +283,7 @@ public class Main {
 						}
 					} while (listError);
 
-//					persona = new Artista(personaID(), email, name, nacionalidad, perfilID(perfil), apodo, listaEspecialidades);
+					persona = new Artista(0L, email, name, nacionalidad, 0L, apodo, listaEspecialidades);
 				}
 				String user = "";
 				do {
@@ -355,8 +359,8 @@ public class Main {
 					read.nextLine();
 					switch (info) {
 					case 'Y':
-//						Credenciales credenciales = new Credenciales(personaID(), user, password, perfil);
-//						saveCredenciales(persona, credenciales);
+						Credenciales credenciales = new Credenciales(0L, user, password, perfil);
+						RegistroControl.registrarPersona(persona, credenciales);
 						break;
 
 					case 'N':

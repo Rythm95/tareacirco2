@@ -17,22 +17,43 @@ import java.util.logging.Logger;
 
 import modelo.Persona;
 
-// Esto en principio no??
-//PersonaDAO y todo lo que tenga que ver con personas (Connection con, PreparedStatement ps, ResultSet rs)
 public class PersonaDAO {
 
 	private static final Logger logger = Logger.getLogger(PersonaDAO.class.getName());
+
+	public static Long insertarPersona(Persona p) {
+		String sql = "INSERT INTO personas (email, nombre_persona, nacionalidad) VALUES (?,?,?)";
+
+		try (Connection con = ConexionDB.getInstance().conectar();
+				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+			ps.setString(1, p.getEmail());
+			ps.setString(2, p.getNombre());
+			ps.setString(3, p.getNacionalidad());
+
+			ps.executeUpdate();
+
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				return rs.getLong(1);
+			}
+
+		} catch (SQLException e) {
+			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
+		}
+		return null;
+	}
 
 	public static List<Persona> listarPersonas() {
 		String sql = "SELECT id, email, nombre_persona, nacionalidad FROM personas";
 		List<Persona> resp = new ArrayList<>();
 
-		try (Connection con = ConexionDB.conectar();
+		try (Connection con = ConexionDB.getInstance().conectar();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
-			
-			con.setAutoCommit(false);
-			
+
+			con.setAutoCommit(false); // AutoCommit???
+
 			Persona persona;
 			while (rs.next()) {
 				Long id = rs.getLong("id");
@@ -49,28 +70,6 @@ public class PersonaDAO {
 		}
 		return resp;
 
-	}
-
-	public Long insertarPersona(Persona p) {
-		String sql = "INSERT INTO personas (email, nombre_persona, nacionalidad) VALUES (?,?,?)";
-
-		try (Connection con = ConexionDB.conectar(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-			ps.setString(1, p.getEmail());
-			ps.setString(2, p.getNombre());
-			ps.setString(3, p.getNacionalidad());
-
-			ps.executeUpdate();
-			
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				return rs.getLong(1);
-			}
-
-		} catch (SQLException e) {
-			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
-		}
-		return null;
 	}
 
 }

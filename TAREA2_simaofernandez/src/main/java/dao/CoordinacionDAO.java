@@ -20,10 +20,10 @@ public class CoordinacionDAO {
 
 	private static final Logger logger = Logger.getLogger(CoordinacionDAO.class.getName());
 
-	public Long insertarCoordinacion(Coordinacion c, Long idPersona) {
+	public static void insertarCoordinacion(Coordinacion c, Long idPersona) {
 		String sql = "INSERT INTO coordinacion(idPersona, senior, fechaSenior) VALUES (?, ?, ?)";
 
-		try (Connection con = ConexionDB.conectar(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+		try (Connection con = ConexionDB.getInstance().conectar(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 			ps.setLong(1, c.getidPersona());
 			ps.setBoolean(2, c.isSenior());
@@ -35,18 +35,10 @@ public class CoordinacionDAO {
 			
 			ps.executeUpdate();
 			
-			// ID Coordinación
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				c.setIdCoord(rs.getLong(1));
-				return rs.getLong(1);
-			}
-			
 		} catch (SQLException e) {
 			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
 		}
 
-		return 0L;
 	}
 
 }

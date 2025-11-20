@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import dao.CredencialesDAO;
 import dao.PersonaDAO;
+import modelo.Credenciales;
 import modelo.Perfil;
 import modelo.Persona;
 
@@ -32,16 +34,14 @@ public class Validaciones {
 	// Cambiar a SQL
 	public static boolean existeUsuario(String user) {
 
-//		try (BufferedReader br = new BufferedReader(new FileReader("ficheros/credenciales.txt"))) {
-//			String line;
-//			while ((line = br.readLine()) != null) {
-//				String[] creds = line.split("\\|");
-//				if (creds[1].equalsIgnoreCase(user))
-//					return true;
-//			}
-//		} catch (IOException e) {
-//			// Si da error no esta repetido.
-//		}
+		List<Credenciales> creds = CredencialesDAO.listarCredenciales();
+		
+		if (!creds.isEmpty()) {
+			for (Credenciales c : creds)
+				if (c.getUser().equals(user))
+					return true;
+		}
+		
 		return false;
 	}
 
@@ -52,10 +52,10 @@ public class Validaciones {
 		if (!personas.isEmpty())
 			for (Persona p : personas) {
 				if (p.getNombre().equals(email)) {
-					return false;
+					return true;
 				}
 			}
 
-		return true;
+		return false;
 	}
 }

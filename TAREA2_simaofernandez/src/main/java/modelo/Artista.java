@@ -5,8 +5,7 @@ import java.util.List;
 public class Artista extends Persona {
 	private Long idArt; // El id da igual, le puedo meter un NULL si me da la gana, pues el importante es el que está en la base de datos 
 	private String apodo=null;
-	// Y si le meto varias veces la misma especialidad?
-	// La base de datos almacena solo la info que no está en personas en una tabla Artistas, con una relación a la 
+	// Y si le meto varias veces la misma especialidad? 
 	private List<Especialidad> especialidades;
 	
 	public Artista(Long id, String email, String nombre, String nacionalidad, Long idArt, String apodo,
@@ -41,7 +40,7 @@ public class Artista extends Persona {
 		this.especialidades = especialidades;
 	}
 	
-	// Convierte las especialidades a una cadena de texto.
+	// Convierte las especialidades a una cadena de texto, separandolas por comas.
 	public String especialidadesToString() {
 		return especialidades.stream().map(Enum::name).reduce((a, b) -> a + "," + b).orElse("");
 	}

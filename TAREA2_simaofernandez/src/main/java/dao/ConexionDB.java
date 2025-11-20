@@ -48,7 +48,7 @@ public class ConexionDB {
 		return instance;
 	}
 
-	public static Connection conectar() {
+	public Connection conectar() {
 		try {
 			return DriverManager.getConnection(url, user, password);
 		} catch (SQLException e) {

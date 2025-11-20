@@ -1,6 +1,6 @@
 package modelo;
 
-public class Credenciales implements Comparable<Credenciales>{
+public class Credenciales implements Comparable<Credenciales> {
 	private Long id;
 	private String user;
 	private String password;
@@ -45,10 +45,10 @@ public class Credenciales implements Comparable<Credenciales>{
 	public void setPerfil(Perfil perfil) {
 		this.perfil = perfil;
 	}
-	
+
 	@Override
 	public int compareTo(Credenciales o) {
-		
+
 		return Long.compare(this.id, o.id);
 	}
 
