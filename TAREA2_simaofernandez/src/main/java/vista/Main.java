@@ -363,7 +363,7 @@ public class Main {
 				do {
 					System.out.println("¿La información es correcta? [Y/N]");
 					info = read.next().toUpperCase().charAt(0);
-					read.nextLine();
+					read.nextLine(); 
 					switch (info) {
 					case 'Y':
 						Credenciales credenciales = new Credenciales(0L, user, password, perfil);
