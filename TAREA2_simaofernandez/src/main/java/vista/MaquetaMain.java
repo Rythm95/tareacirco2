@@ -403,8 +403,8 @@ public class MaquetaMain {
 					read.nextLine();
 					switch (info) {
 					case 'Y':
-						Espectaculo esp = new Espectaculo(id, name, dateSt, dateEn, idCoordinador);
-						espectaculos.add(esp);
+						//Espectaculo esp = new Espectaculo(id, name, dateSt, dateEn, idCoordinador);
+						//espectaculos.add(esp);
 						saveEspectaculos();
 						break;
 

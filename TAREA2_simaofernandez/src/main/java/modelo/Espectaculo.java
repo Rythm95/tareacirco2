@@ -4,19 +4,19 @@ import java.time.LocalDate;
 
 public class Espectaculo implements Comparable<Espectaculo> {
 	private Long id;
+	private Long idCoordinacion;
 	private String nombre;
 	private LocalDate fechaini;
-	private LocalDate fechacfin;
-	private Long idCoordinacion;
+	private LocalDate fechafin;
 
-
-	public Espectaculo(Long id, String nombre, LocalDate fechaini, LocalDate fechacfin, Long idCoordinacion) {
+	public Espectaculo(Long id, Long idCoordinacion, String nombre, LocalDate fechaini, LocalDate fechafin) {
 		super();
 		this.id = id;
+		this.idCoordinacion = idCoordinacion;
 		this.nombre = nombre;
 		this.fechaini = fechaini;
-		this.fechacfin = fechacfin;
-		this.idCoordinacion = idCoordinacion;
+		this.fechafin = fechafin;
+
 	}
 
 	public Long getId() {
@@ -25,6 +25,14 @@ public class Espectaculo implements Comparable<Espectaculo> {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getIdCoordinacion() {
+		return idCoordinacion;
+	}
+
+	public void setIdCoordinacion(Long idCoordinacion) {
+		this.idCoordinacion = idCoordinacion;
 	}
 
 	public String getNombre() {
@@ -43,25 +51,17 @@ public class Espectaculo implements Comparable<Espectaculo> {
 		this.fechaini = fechaini;
 	}
 
-	public LocalDate getFechacfin() {
-		return fechacfin;
+	public LocalDate getFechafin() {
+		return fechafin;
 	}
 
-	public void setFechacfin(LocalDate fechacfin) {
-		this.fechacfin = fechacfin;
-	}
-
-	public Long getIdCoordinacion() {
-		return idCoordinacion;
-	}
-
-	public void setIdCoordinacion(Long idCoordinacion) {
-		this.idCoordinacion = idCoordinacion;
+	public void setFechafin(LocalDate fechacfin) {
+		this.fechafin = fechacfin;
 	}
 
 	@Override
 	public String toString() {
-		return "Espectáculo " + id + " - " + nombre + " [De " + fechaini + " a " + fechacfin + "]";
+		return "Espectáculo " + id + " - " + nombre + " [De " + fechaini + " a " + fechafin + "]";
 	}
 
 	@Override

@@ -17,15 +17,15 @@ public class CredencialesDAO {
 	private static final Logger logger = Logger.getLogger(CredencialesDAO.class.getName());
 
 	public static Long insertarCredenciales(Credenciales c, Long idPersona) {
-		String sql = "INSERT INTO credenciales (usuario, password, perfil, idPersona) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO credenciales (usuario, idPersona, password, perfil) VALUES (?, ?, ?, ?)";
 
 		try (Connection con = ConexionDB.getInstance().conectar();
 				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 			ps.setString(1, c.getUser());
-			ps.setString(2, c.getPassword());
-			ps.setString(3, c.getPerfil().name());
-			ps.setLong(4, idPersona);
+			ps.setLong(2, idPersona);
+			ps.setString(3, c.getPassword());
+			ps.setString(4, c.getPerfil().name());
 
 			ps.executeUpdate();
 
@@ -43,7 +43,7 @@ public class CredencialesDAO {
 		return null;
 
 	}
-	
+
 	public static List<Credenciales> listarCredenciales() {
 		String sql = "SELECT id, usuario, password, perfil FROM credenciales";
 		List<Credenciales> resp = new ArrayList<>();

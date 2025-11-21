@@ -11,19 +11,27 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import control.ArtistaControl;
+import control.CoordinacionControl;
+import control.NumeroControl;
 import control.RegistroControl;
 import control.Validaciones;
 import dao.AccesoPaises;
+import dao.EspectaculoDAO;
+import dao.NumeroDAO;
 import modelo.Artista;
 import modelo.Coordinacion;
 import modelo.Credenciales;
 import modelo.Especialidad;
+import modelo.Espectaculo;
+import modelo.Numero;
 import modelo.Perfil;
 import modelo.Persona;
 import modelo.Sesion;
@@ -88,9 +96,6 @@ public class Main {
 				System.out.println("Error al cargar las propiedades.");
 			}
 
-			String usAdmin = properties.getProperty("usuarioAdmin");
-			String pasAdmin = properties.getProperty("passwordAdmin");
-
 			sesion.setPerfil(Validaciones.validarSesion(name, password));
 
 			if (sesion.getPerfil() == Perfil.INVITADO) {
@@ -132,6 +137,7 @@ public class Main {
 		System.out
 				.println("3 - Gestionar Personas\n2 - Gestionar Espectáculos\n1 - Ver Espectáculos\n0 - Cerrar Sesión");
 		char menu = read.next().charAt(0);
+		read.nextLine();
 		switch (menu) {
 
 		case '3':
@@ -140,7 +146,7 @@ public class Main {
 			break;
 
 		case '2':
-//			gestionEspectaculos();
+			gestionEspectaculos();
 			System.out.println();
 			break;
 
@@ -149,7 +155,7 @@ public class Main {
 			break;
 
 		case '0':
-//			cerrarSesion();
+			cerrarSesion();
 
 			return;
 
@@ -274,7 +280,8 @@ public class Main {
 						listError = false;
 						for (String es : especialidades) {
 							try {
-								listaEspecialidades.add(Especialidad.valueOf(es.trim()));
+								if (!listaEspecialidades.contains(Especialidad.valueOf(es.trim())))
+									listaEspecialidades.add(Especialidad.valueOf(es.trim()));
 							} catch (IllegalArgumentException e) {
 								System.out.println("La especialidad no es válida. Vuelva a intentarlo.");
 								listError = true;
@@ -383,4 +390,328 @@ public class Main {
 		} while (menu != '0');
 	}
 
+	private static void gestionEspectaculos() {
+		char menu;
+
+		do {
+			System.out.println("¿Cómo desea gestionar los Espectaculos?");
+			System.out.println(
+					"3 - Crear o modificar espectáculo\n2 - Crear o modificar número\n1 - Asignar artistas\n0 - Cancelar");
+			menu = read.next().charAt(0);
+			read.nextLine();
+
+			switch (menu) {
+			case '3': // Crear y modificar espectáculos
+				cmEspectaculo();
+				break;
+			case '2': // Sin Implementar
+				cmNumero();
+				break;
+			case '1': // Sin Implementar
+				System.out.println("La función aún no ha sido implementada.");
+				break;
+			case '0':
+				System.out.println();
+				break;
+			default:
+				System.out.println("Se ha introducido un valor no válido. Vuelva a intentarlo.");
+
+			}
+
+		} while (menu != '0');
+
+	}
+
+	private static void cmEspectaculo() {
+		char menu;
+		do {
+			System.out.println("2 - Crear espectáculo\n1 - Modificar espectáculo existente\n0 - Cancelar");
+			menu = read.next().charAt(0);
+			read.nextLine();
+			switch (menu) {
+			// Crear espectáculo
+			case '2':
+				System.out.println("Introduzca un nombre único para el espectáculo.");
+				String name = read.nextLine();
+				if (name.length() > 25) {
+					System.out.println("El nombre no debe superar los 25 caracteres.");
+					break;
+				}
+				if (name.isEmpty()) {
+					System.out.println("El nombre no debe estar vacío.");
+					break;
+				}
+				LocalDate dateSt;
+				System.out.println("Introduzca la fecha inicial del espectáculo. (yyyy-mm-dd)");
+				try {
+					dateSt = LocalDate.parse(read.next());
+					read.nextLine();
+				} catch (DateTimeParseException e) {
+					System.out.println("La fecha no es válida.");
+					break;
+				}
+				LocalDate dateEn;
+				System.out.println("Introduzca la fecha final del espectáculo. (yyyy-mm-dd)");
+				try {
+					dateEn = LocalDate.parse(read.next());
+					read.nextLine();
+
+					if (dateEn.isBefore(dateSt)) {
+						System.out.println("La fecha final no puede ser anterior a la fecha inicial.");
+						break;
+					} else if (dateSt.plusYears(1).isBefore(dateEn)) {
+						System.out.println("La duración del espectáculo no debe ser superior a un año.");
+						break;
+					}
+
+				} catch (DateTimeParseException e) {
+					System.out.println("La fecha no es válida.");
+					break;
+				}
+
+				if (Validaciones.existeEspectaculo(name)) {
+					System.out.println("Ya existe un espectáculo con ese nombre.");
+					break;
+				}
+
+				Long idCoordinador = 0L;
+
+				if (sesion.getPerfil() == Perfil.COORDINACION) {
+
+					// Obtener el ID del coordinador en sesion
+					for (Map.Entry<Long, String> en : CoordinacionControl.getMapCoordinadores().entrySet()) {
+						if (en.getValue().equalsIgnoreCase(sesion.getNombre())) {
+							idCoordinador = en.getKey();
+						}
+
+					}
+					if (idCoordinador == 0) {
+						System.out.println("Error al obtener el Id");
+						break;
+					}
+
+				} else {
+
+					if (CoordinacionControl.getMapCoordinadores().isEmpty()) {
+						System.out.println("No existen coordinadores. Registra uno antes de crear un espectáculo.");
+						break;
+					}
+
+					boolean idVal = false;
+					do {
+						System.out.println("Elige un coordinador para el espectáculo (elije su id).");
+						System.out.println("Coordinadores: ");
+						for (Map.Entry<Long, String> en : CoordinacionControl.getMapCoordinadores().entrySet()) {
+
+							System.out.println("- " + en.getValue() + " [Id " + en.getKey() + "]");
+						}
+
+						try {
+
+							idCoordinador = read.nextLong();
+							read.nextLine();
+
+							if (!CoordinacionControl.getMapCoordinadores().containsKey(idCoordinador))
+								System.out.println(
+										"El id seleccionado no pertenece a ningún coordinador. Inténtelo de nuevo.\n");
+
+							else
+								idVal = true;
+
+						} catch (InputMismatchException e) {
+							System.out.println("Se ha introducido un valor no válido. Inténtelo de nuevo.\n");
+							read.nextLine();
+						}
+
+					} while (!idVal);
+
+				}
+
+				System.out.println("El nuevo espectáculo se ve así:");
+				System.out.println("Nombre: " + name + "\nFecha Inicio: " + dateSt + "\nFecha Fin: " + dateEn
+						+ "\nID de Coordinador: " + idCoordinador);
+				char info;
+				do {
+					System.out.println("¿La información es correcta? [Y/N]");
+					info = read.next().toUpperCase().charAt(0);
+					read.nextLine();
+					switch (info) {
+					case 'Y':
+						Espectaculo esp = new Espectaculo(0L, idCoordinador, name, dateSt, dateEn);
+
+						if (NumeroControl.getMapNumero().size() < 3) {
+							System.out.println(
+									"No hay suficientes números. Registra al menos 3 antes de crear un nuevo espectáculo.");
+							break;
+						}
+
+						int numContador = 0;
+						boolean elegirNumeros = true;
+						List<Long> idNums = new ArrayList<>();
+						do {
+							System.out.println("Elige al menos 3 números para el espectáculo.");
+							System.out.println("Números: ");
+							for (Map.Entry<Long, String> en : NumeroControl.getMapNumero().entrySet()) {
+
+								System.out.println("- " + en.getValue() + " [Id " + en.getKey() + " ]");
+							}
+
+							Long idnum;
+							try {
+								idnum = read.nextLong();
+							} catch (InputMismatchException e) {
+								System.out.println("Se ha introducido un valor no válido.");
+								break;
+							}
+
+							if (!NumeroControl.getMapNumero().containsKey(idnum)) {
+								System.out.println(
+										"El id introducido no está asociado a ningún número. Inténtelo de nuevo.");
+								break;
+							}
+
+							if (!idNums.contains(idnum)) {
+								System.out.println(
+										"No puede asociar el mismo número dos veces a un solo espectáculo. Inténtelo de nuevo.");
+							} else {
+								idNums.add(idnum);
+								++numContador;
+							}
+
+							if (numContador >= 3) {
+								char info2;
+								do {
+									System.out
+											.println("Ha añadido suficientes números. ¿Desea seguir añadiendo? [Y/N]");
+									info2 = read.next().toUpperCase().charAt(0);
+									read.nextLine();
+									switch (info2) {
+									case 'Y':
+										break;
+
+									case 'N':
+										info = 'N';
+										break;
+
+									default:
+										System.out
+												.println("Se ha introducido un valor no válido. Vuelva a intentarlo.");
+									}
+								} while (info != 'Y' && info != 'N');
+
+							}
+
+						} while (elegirNumeros);
+
+						EspectaculoDAO.insertarEspectaculo(esp);
+						break;
+
+					case 'N':
+						break;
+
+					default:
+						System.out.println("Se ha introducido un valor no válido. Vuelva a intentarlo.");
+					}
+				} while (info != 'Y' && info != 'N');
+
+				break;
+
+			// Modificar espectáculo
+			case '1':
+				System.out.println("La función aún no ha sido implementada.");
+				break;
+
+			// Cancelar
+			case '0':
+				System.out.println("Operación cancelada.");
+				break;
+
+			default:
+				System.out.println("Se ha introducido un valor no válido. Vuelva a intentarlo.");
+
+			}
+		} while (menu != '0');
+	}
+
+	private static void cmNumero() {
+		char menu;
+		do {
+			menu = read.next().charAt(0);
+			read.nextLine();
+
+			switch (menu) {
+			// Crear numero
+			case '2':
+				System.out.println("Introduzca un nombre único para el número.");
+				String name = read.nextLine();
+
+				System.out.println("Introduce la duración del número (min).");
+				double dur;
+				try {
+					dur = read.nextDouble();
+					read.nextLine();
+				} catch (InputMismatchException e) {
+					System.out.println("Se ha introducido un valor no válido.");
+					read.nextLine();
+					break;
+				}
+				if ((dur % 0.5) != 0) {
+					System.out.println("La duración del numero debe acabar en .5 o .0.");
+					break;
+				}
+
+				if (Validaciones.existeNumero(name)) {
+					System.out.println("Ya existe un número con ese nombre.");
+					break;
+				}
+
+				if (ArtistaControl.getMapArtista().isEmpty()) {
+					System.out.println("No existen artistas. Registra uno antes de crear un número.");
+					break;
+				}
+
+				System.out.println("El nuevo número se ve así:");
+				System.out.println("Nombre: " + name + "\nDuración: " + dur);
+				char info;
+				do {
+					System.out.println("¿La información es correcta? [Y/N]");
+					info = read.nextLine().toUpperCase().charAt(0);
+					read.nextLine();
+					switch (info) {
+					case 'Y':
+						Numero nu = new Numero(0L, name, dur);
+						NumeroDAO.insertarNumero(nu);
+						break;
+
+					case 'N':
+						break;
+
+					default:
+						System.out.println("Se ha introducido un valor no válido. Vuelva a intentarlo.");
+					}
+				} while (info != 'Y' && info != 'N');
+
+				break;
+
+			// Modificar numero
+			case '1':
+				System.out.println("La función aún no ha sido implementada.");
+				break;
+
+			// Cancelar
+			case '0':
+				System.out.println("Operación cancelada.");
+				break;
+
+			default:
+				System.out.println("Se ha introducido un valor no válido. Vuelva a intentarlo.");
+
+			}
+		} while (menu != '0');
+	}
+
+	private static void cerrarSesion() {
+		sesion.setPerfil(Perfil.INVITADO);
+		System.out.println("Su sesión ha sido cerrada");
+	}
 }

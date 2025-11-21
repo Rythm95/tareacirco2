@@ -52,7 +52,7 @@ public class PersonaDAO {
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
-			con.setAutoCommit(false); // AutoCommit???
+			//con.setAutoCommit(false); // AutoCommit???
 
 			Persona persona;
 			while (rs.next()) {

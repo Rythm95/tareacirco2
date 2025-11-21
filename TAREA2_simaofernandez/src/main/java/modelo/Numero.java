@@ -15,6 +15,15 @@ public class Numero {
 		this.duracion = duracion;
 		this.idEspec = idEspec;
 	}
+	
+	public Numero(Long id, String nombre, double duracion) {
+		super();
+		this.id = id;
+		this.orden = 0;
+		this.nombre = nombre;
+		this.duracion = duracion;
+		this.idEspec = null;
+	}
 
 	public Long getIdEspec() {
 		return idEspec;
