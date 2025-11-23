@@ -46,5 +46,5 @@ public class Coordinacion extends Persona {
 	public void setFechasenior(LocalDate fechasenior) {
 		this.fechasenior = fechasenior;
 	}
-
+	
 }

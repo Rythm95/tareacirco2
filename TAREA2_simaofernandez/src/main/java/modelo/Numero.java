@@ -65,4 +65,8 @@ public class Numero {
 		this.duracion = duracion;
 	}
 
+	public String toString() {
+		return "Id: "+id+"\tNombre: "+nombre+"\tDuración: "+duracion + " min";
+	}
+	
 }

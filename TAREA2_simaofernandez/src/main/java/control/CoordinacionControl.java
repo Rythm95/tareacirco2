@@ -9,6 +9,10 @@ import modelo.Coordinacion;
 
 public class CoordinacionControl {
 
+	public static List<Coordinacion> getCoordinacion(){
+		return CoordinacionDAO.listarCoordinacion();
+	}
+	
 	public static Map<Long, String> getMapCoordinadores() {
 
 		Map<Long, String> mapCoordinadores = new LinkedHashMap<>();
@@ -20,6 +24,13 @@ public class CoordinacionControl {
 		}
 
 		return mapCoordinadores;
+	}
+	
+	public static Long getCoordinadorId(String usuario) {
+		Map<String, Long> credencialesCoordinacion = CoordinacionDAO.credencialesCoordinacion();
+		
+		return credencialesCoordinacion.get(usuario);
+		
 	}
 
 }

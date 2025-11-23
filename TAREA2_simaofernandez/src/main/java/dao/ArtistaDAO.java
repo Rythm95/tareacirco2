@@ -1,17 +1,17 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import modelo.Artista;
-import modelo.Coordinacion;
 import modelo.Especialidad;
 
 public class ArtistaDAO {
@@ -75,6 +75,45 @@ public class ArtistaDAO {
 			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
 		}
 		return resp;
+	}
+
+	public static void actualizarArtista(Artista a, Long idPersona) {
+		String sql = "UPDATE artistas SET apodo = ?, especialidades = ? WHERE idPersona = ?";
+
+		try (Connection con = ConexionDB.getInstance().conectar(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, a.getApodo());
+			ps.setString(2, a.especialidadesToString());
+			ps.setLong(3, idPersona);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
+		}
+
+	}
+	
+	public static Map<String, Long> credencialesArtista() {
+		String sql = "SELECT a.idArtista, cr.usuario  FROM credenciales cr INNER JOIN artistas a ON cr.idPersona = a.idPersona";
+		Map<String, Long> usuarioArtista = new HashMap<>();
+
+		try (Connection con = ConexionDB.getInstance().conectar();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
+			while (rs.next()) {
+				Long idArtista = rs.getLong("idArtista");
+				String usuario = rs.getString("usuario");
+
+				usuarioArtista.put(usuario, idArtista);
+			}
+
+		} catch (SQLException e) {
+			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
+		}
+		return usuarioArtista;
+
 	}
 
 }

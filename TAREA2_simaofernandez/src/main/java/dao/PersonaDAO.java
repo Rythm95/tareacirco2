@@ -52,8 +52,6 @@ public class PersonaDAO {
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
-			//con.setAutoCommit(false); // AutoCommit???
-
 			Persona persona;
 			while (rs.next()) {
 				Long id = rs.getLong("id");
@@ -70,6 +68,23 @@ public class PersonaDAO {
 		}
 		return resp;
 
+	}
+
+	public static void actualizarPersona(Persona p, Long idPersona) {
+		String sql = "UPDATE personas SET email = ?, nombre_persona = ?, nacionalidad = ? WHERE id = ?";
+
+		try (Connection con = ConexionDB.getInstance().conectar(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, p.getEmail());
+			ps.setString(2, p.getNombre());
+			ps.setString(3, p.getNacionalidad());
+			ps.setLong(4, idPersona);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			logger.warning("Error al conectar con la base de datos: " + e.getMessage());
+		}
 	}
 
 }

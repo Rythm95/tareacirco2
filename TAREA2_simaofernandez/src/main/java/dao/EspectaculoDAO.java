@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import modelo.Espectaculo;
-import modelo.Persona;
 
 public class EspectaculoDAO {
 
@@ -23,10 +22,10 @@ public class EspectaculoDAO {
 		try (Connection con = ConexionDB.getInstance().conectar();
 				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-			ps.setString(1, e.getNombre());
-			ps.setDate(2, Date.valueOf(e.getFechaini()));
-			ps.setDate(3, Date.valueOf(e.getFechafin()));
-			ps.setLong(4, e.getIdCoordinacion());
+			ps.setLong(1, e.getIdCoordinacion());
+			ps.setString(2, e.getNombre());
+			ps.setDate(3, Date.valueOf(e.getFechaini()));
+			ps.setDate(4, Date.valueOf(e.getFechafin()));
 
 			ps.executeUpdate();
 
@@ -58,7 +57,8 @@ public class EspectaculoDAO {
 				Date fecha_ini = rs.getDate("fecha_ini");
 				Date fecha_fin = rs.getDate("fecha_fin");
 
-				espectaculo = new Espectaculo(id, idCoordinacion, nombre, fecha_ini.toLocalDate(), fecha_fin.toLocalDate());
+				espectaculo = new Espectaculo(id, idCoordinacion, nombre, fecha_ini.toLocalDate(),
+						fecha_fin.toLocalDate());
 				resp.add(espectaculo);
 			}
 
@@ -68,5 +68,25 @@ public class EspectaculoDAO {
 		return resp;
 
 	}
-	
+
+	public static void actualizarEspectaculo(Espectaculo e, Long idEsp) {
+		String sql = "UPDATE espectaculos SET idCoordinacion = ?, nombre = ?, fecha_ini = ?, fecha_fin = ? WHERE id = ?";
+
+		try (Connection con = ConexionDB.getInstance().conectar();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setLong(1, e.getIdCoordinacion());
+			ps.setString(2, e.getNombre());
+			ps.setDate(3, Date.valueOf(e.getFechaini()));
+			ps.setDate(4, Date.valueOf(e.getFechafin()));
+			ps.setLong(5, idEsp);
+
+			ps.executeUpdate();
+
+		} catch (SQLException ex) {
+			logger.warning("Error al conectar con la base de datos: " + ex.getMessage());
+		}
+
+	}
+
 }
