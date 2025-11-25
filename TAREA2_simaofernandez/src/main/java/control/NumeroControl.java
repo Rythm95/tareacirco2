@@ -47,5 +47,33 @@ public class NumeroControl {
 	public static List<Long> getArtistasNumero(Long idNum) {
 		return ArtistaNumeroDAO.mapArtistaNumero(idNum);
 	}
+
+	public static boolean existeNumero(String name) {
+	
+		List<Numero> numeros = NumeroDAO.listarNumero();
+	
+		for (Numero n : numeros) {
+			if (n.getNombre().equals(name))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean numeroEnEspectaculo(Long idNumero, Long idEsp) {
+	
+		List<Numero> numeros = NumeroDAO.listarNumero();
+	
+		for (Numero n : numeros) {
+			if (n.getId().equals(idNumero) && n.getIdEspec() != null) {
+				if (n.getIdEspec().equals(idEsp)) {
+					return false;
+				}
+				return true;
+				
+			}
+	
+		}
+		return false;
+	}
 	
 }

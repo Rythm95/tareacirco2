@@ -57,4 +57,18 @@ public class PersonaControl {
 
 	}
 
+	public static boolean existeEmail(String email) {
+	
+		List<Persona> personas = PersonaDAO.listarPersonas();
+	
+		if (!personas.isEmpty())
+			for (Persona p : personas) {
+				if (p.getNombre().equals(email)) {
+					return true;
+				}
+			}
+	
+		return false;
+	}
+
 }

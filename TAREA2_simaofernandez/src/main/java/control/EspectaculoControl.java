@@ -25,5 +25,17 @@ public class EspectaculoControl {
 
 		return mapEspectaculos;
 	}
+
+	public static boolean existeEspectaculo(String name) {
+	
+		List<Espectaculo> espectaculos = EspectaculoDAO.listarEspectaculos();
+	
+		for (Espectaculo e : espectaculos) {
+			if (e.getNombre().equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }

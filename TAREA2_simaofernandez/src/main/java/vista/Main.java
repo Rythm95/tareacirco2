@@ -17,12 +17,13 @@ import java.util.regex.Pattern;
 
 import control.ArtistaControl;
 import control.CoordinacionControl;
+import control.CredencialesControl;
 import control.EspectaculoControl;
 import control.NumeroControl;
 import control.PaisesControl;
 import control.PersonaControl;
 import control.RegistroControl;
-import control.Validaciones;
+import control.SesionControl;
 import modelo.Artista;
 import modelo.Coordinacion;
 import modelo.Credenciales;
@@ -79,14 +80,17 @@ public class Main {
 
 		System.out.println("2 - Iniciar Sesión\n1 - Ver Espectáculos\n0 - Salir");
 		menu = read.next().charAt(0);
+		read.nextLine();
 		switch (menu) {
 		case '2':
 			System.out.println("Introduce tu nombre de usuario:");
 			name = read.next().trim();
+			read.nextLine();
 			System.out.println("Introduce tu contraseña");
 			password = read.next().trim();
+			read.nextLine();
 
-			sesion.setPerfil(Validaciones.validarSesion(name, password));
+			sesion.setPerfil(SesionControl.validarSesion(name, password));
 
 			if (sesion.getPerfil() == Perfil.INVITADO) {
 				System.out.println("Error al iniciar sesión. El nombre o la contraseña no son correctos.");
@@ -320,12 +324,12 @@ public class Main {
 					}
 				} while (password == "");
 
-				if (Validaciones.existeUsuario(user)) {
+				if (CredencialesControl.existeUsuario(user)) {
 					System.out.println("Ya hay un usuario registrado con ese nombre.");
 					return;
 				}
 
-				if (Validaciones.existeEmail(email)) {
+				if (PersonaControl.existeEmail(email)) {
 					System.out.println("Ya hay un usuario registrado con ese email.");
 					return;
 				}
@@ -535,7 +539,7 @@ public class Main {
 					}
 
 					if (!newEmail.equals(PersonaControl.getMapPersonasEmail().get(idper))
-							&& Validaciones.existeEmail(newEmail)) {
+							&& PersonaControl.existeEmail(newEmail)) {
 						System.out.println("Ya hay un usuario registrado con ese email.");
 						return;
 					}
@@ -749,7 +753,7 @@ public class Main {
 					break;
 				}
 
-				if (Validaciones.existeEspectaculo(name)) {
+				if (EspectaculoControl.existeEspectaculo(name)) {
 					System.out.println("Ya existe un espectáculo con ese nombre.");
 					break;
 				}
@@ -842,7 +846,7 @@ public class Main {
 									System.out.println(
 											"El id introducido no está asociado a ningún número. Inténtelo de nuevo.");
 
-								else if (Validaciones.numeroEnEspectaculo(idnum, 0L))
+								else if (NumeroControl.numeroEnEspectaculo(idnum, 0L))
 									System.out.println("El número ya está asociado a otro espectáculo.");
 
 								else if (idNums.contains(idnum))
@@ -980,7 +984,7 @@ public class Main {
 					}
 
 					if (!newName.equals(EspectaculoControl.getMapEspectaculos().get(idesp))
-							&& Validaciones.existeEspectaculo(newName)) {
+							&& EspectaculoControl.existeEspectaculo(newName)) {
 						System.out.println("Ya existe un espectáculo con ese nombre.");
 						break;
 					}
@@ -1072,7 +1076,7 @@ public class Main {
 										System.out.println(
 												"El id introducido no está asociado a ningún número. Inténtelo de nuevo.");
 
-									else if (Validaciones.numeroEnEspectaculo(idnum, idesp))
+									else if (NumeroControl.numeroEnEspectaculo(idnum, idesp))
 										System.out.println("El número ya está asociado a otro espectáculo.");
 
 									else if (idNums.contains(idnum))
@@ -1260,7 +1264,7 @@ public class Main {
 					break;
 				}
 
-				if (Validaciones.existeNumero(name)) {
+				if (NumeroControl.existeNumero(name)) {
 					System.out.println("Ya existe un número con ese nombre.");
 					break;
 				}
@@ -1418,7 +1422,7 @@ public class Main {
 					}
 
 					if (!newName.equals(NumeroControl.getMapNumero().get(idnum))
-							&& Validaciones.existeNumero(newName)) {
+							&& NumeroControl.existeNumero(newName)) {
 						System.out.println("Ya existe un número con ese nombre.");
 						break;
 					}
