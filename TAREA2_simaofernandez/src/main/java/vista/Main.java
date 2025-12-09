@@ -34,7 +34,6 @@ import modelo.Perfil;
 import modelo.Persona;
 import modelo.Sesion;
 
-// Separar en clases por sesiones
 public class Main {
 
 	static private Scanner read = new Scanner(System.in);
@@ -764,7 +763,6 @@ public class Main {
 				if (sesion.getPerfil() == Perfil.COORDINACION) {
 
 					// Obtener el ID del coordinador en sesion
-
 					idCoordinador = CoordinacionControl.getCoordinadorId(sesion.getNombre());
 
 				} else {

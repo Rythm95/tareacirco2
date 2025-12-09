@@ -5,7 +5,7 @@ import java.util.List;
 public class Artista extends Persona {
 	private Long idArt; // El id da igual, le puedo meter un NULL si me da la gana, pues el importante es el que está en la base de datos 
 	private String apodo=null;
-	// Y si le meto varias veces la misma especialidad? 
+
 	private List<Especialidad> especialidades;
 	
 	public Artista(Long id, String email, String nombre, String nacionalidad, Long idArt, String apodo,
